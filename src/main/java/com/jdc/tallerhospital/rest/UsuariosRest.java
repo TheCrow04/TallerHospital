@@ -49,7 +49,7 @@ public class UsuariosRest {
             usuarioexistente.setEstado(usuario.getEstado());
             usuarioexistente.setPassword(usuario.getPassword());
             usuarioexistente.setUsername(usuario.getUsername());
-            UsuariosEntity actualizado = usuariosService.save(usuarioExistente);
+            UsuariosEntity actualizado = usuariosService.save(usuarioexistente);
             return ResponseEntity.ok(actualizado);
         }catch (Exception e) {
             System.out.println("El error es:" +e.getMessage());
