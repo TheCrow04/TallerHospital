@@ -49,9 +49,8 @@ public class UsuariosRest {
             usuarioexistente.setEstado(usuario.getEstado());
             usuarioexistente.setPassword(usuario.getPassword());
             usuarioexistente.setUsername(usuario.getUsername());
-            usuariosService.save(usuarioexistente);
-            ResponseEntity.status(200);
-            return ResponseEntity.ok(usuario);
+            UsuariosEntity actualizado = usuariosService.save(usuarioExistente);
+            return ResponseEntity.ok(actualizado);
         }catch (Exception e) {
             System.out.println("El error es:" +e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
