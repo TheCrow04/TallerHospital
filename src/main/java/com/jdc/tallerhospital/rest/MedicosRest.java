@@ -16,6 +16,8 @@ import java.util.List;
 public class MedicosRest {
     @Autowired
     private IMedicosService medicosService;
+    @Autowired
+    private ICategoriasService categoriasService;
 
     @GetMapping("/listar")
     public ResponseEntity<List<MedicosEntity>> findAll() {
@@ -52,10 +54,14 @@ public class MedicosRest {
             medicoexistente.setGenero(medico.getGenero());
             medicoexistente.setEmail(medico.getEmail());
             medicoexistente.setTelefono(medico.getTelefono());
-            medicoexistente.setCategoria(medico.getCategoria());
-            medicosService.save(medicoexistente);
+            if (medico.getCategoria() != null && medico.getCategoria().getIdcategoria() != null) {
+                CategoriasEntity categoria = categoriasService.findById(medico.getCategoria().getIdcategoria());
+                medicoExistente.setCategoria(categoria);
+            }
+            MedicosEntity actualizado = medicosService.save(medicoExistente);
+            actualizado.getCategoria().getNombrecategoria();
             ResponseEntity.status(200);
-            return ResponseEntity.ok(medico);
+            return ResponseEntity.ok(actualizado);
         }catch (Exception e) {
             System.out.println("El error es:" +e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
