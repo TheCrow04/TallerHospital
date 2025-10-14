@@ -52,6 +52,7 @@ public class MedicosRest {
             medicoexistente.setGenero(medico.getGenero());
             medicoexistente.setEmail(medico.getEmail());
             medicoexistente.setTelefono(medico.getTelefono());
+            medicoexistente.setCategoria(medico.getCategoria());
             medicosService.save(medicoexistente);
             ResponseEntity.status(200);
             return ResponseEntity.ok(medico);
