@@ -46,6 +46,7 @@ public class UsuariosRest {
 
         try {
             UsuariosEntity usuarioexistente = usuariosService.findById(id);
+            usuarioexistente.setIdusuario(usuario.getIdusuario());
             usuarioexistente.setEstado(usuario.getEstado());
             usuarioexistente.setPassword(usuario.getPassword());
             usuarioexistente.setUsername(usuario.getUsername());
