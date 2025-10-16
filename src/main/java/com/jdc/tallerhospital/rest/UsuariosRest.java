@@ -1,5 +1,6 @@
 package com.jdc.tallerhospital.rest;
 
+import com.jdc.tallerhospital.DTO.UsuariosDTO;
 import com.jdc.tallerhospital.entity.UsuariosEntity;
 import com.jdc.tallerhospital.service.IUsuariosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,19 +41,24 @@ public class UsuariosRest {
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<UsuariosEntity> edit(
+    public ResponseEntity<UsuariosDTO> edit(
             @PathVariable("id") Long id,
-            @RequestBody @Validated UsuariosEntity usuario) {
+            @RequestBody @Validated UsuariosDTO usuariodto) {
 
         try {
             UsuariosEntity usuarioexistente = usuariosService.findById(id);
-            usuarioexistente.setIdusuario(usuario.getIdusuario());
-            usuarioexistente.setEstado(usuario.getEstado());
-            usuarioexistente.setPassword(usuario.getPassword());
-            usuarioexistente.setUsername(usuario.getUsername());
+            usuarioexistente.setEstado(usuariodto.getEstado());
+            usuarioexistente.setPassword(usuariodto.getPassword());
+            usuarioexistente.setUsername(usuariodto.getUsername());
 
             UsuariosEntity actualizado = usuariosService.save(usuarioexistente);
-            return ResponseEntity.ok(actualizado);
+            UsuariosDTO responseDTO = new UsuariosDTO(
+                    actualizado.getIdusuario(),
+                    actualizado.getUsername(),
+                    actualizado.getPassword(),
+                    actualizado.getEstado()
+            );
+            return ResponseEntity.ok(responseDTO);
         }catch (Exception e) {
             System.out.println("El error es:" +e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
