@@ -52,6 +52,7 @@ public class UsuariosRest {
             usuarioexistente.setUsername(usuariodto.getUsername());
 
             UsuariosEntity actualizado = usuariosService.save(usuarioexistente);
+            System.out.println("ID DESPUÉS DE GUARDAR: " + actualizado.getIdusuario());
             UsuariosDTO responseDTO = new UsuariosDTO(
                     actualizado.getIdusuario(),
                     actualizado.getUsername(),
