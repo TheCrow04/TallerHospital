@@ -14,8 +14,8 @@ public class UsuariosEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idusuario", updatable = false, nullable = false)
-    private Long idusuario;
+    @Column(name = "idusuario")
+    private Integer idusuario;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -26,11 +26,11 @@ public class UsuariosEntity implements Serializable {
     @Column(name = "estado", nullable = false, length = 20)
     private String estado;
 
-    public Long getIdusuario() {
+    public Integer getIdusuario() {
         return idusuario;
     }
 
-    public void setIdusuario(Long idusuario) {
+    public void setIdusuario(Integer idusuario) {
         this.idusuario = idusuario;
     }
 

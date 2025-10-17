@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface IUsuariosService {
     public List<UsuariosEntity> findAll();
-    public UsuariosEntity findById(Long id);
-    public UsuariosEntity save(UsuariosEntity usuario);
-    public void delete(Long id);
+    public UsuariosEntity findById(Integer id);
+    public UsuariosEntity save(UsuariosEntity e);
+    public void delete(Integer id);
 
 }

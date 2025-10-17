@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -23,59 +25,36 @@ public class UsuariosRest {
         return ResponseEntity.ok(usuariosService.findAll());
     }
 
-    @GetMapping("/listarby/{id}")
-    public ResponseEntity<UsuariosEntity> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(usuariosService.findById(id));
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        var e = usuariosService.findById(id);
+        return (e == null) ? ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado")
+                : ResponseEntity.ok(e);
     }
 
     @PostMapping("/crear")
-    public ResponseEntity<UsuariosEntity> create(@RequestBody @Validated UsuariosEntity usuario) {
-        try {
-            usuariosService.save(usuario);
-            ResponseEntity.status(200);
-            return ResponseEntity.ok(usuario);
-        } catch (Exception e) {
-            System.out.println("El error es:" +e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<?> create(@RequestBody @Validated UsuariosEntity body, UriComponentsBuilder uriBuilder) {
+        var saved = usuariosService.save(body);
+        URI location = uriBuilder.path("/api/usuarios/{id}").buildAndExpand(saved.getIdusuario()).toUri();
+        return ResponseEntity.created(location).body(saved);
     }
 
     @PutMapping("/editar/{id}")
-    public ResponseEntity<UsuariosDTO> edit(
-            @PathVariable("id") Long id,
-            @RequestBody @Validated UsuariosDTO usuariodto) {
-
-        try {
-            UsuariosEntity usuarioexistente = usuariosService.findById(id);
-            usuarioexistente.setEstado(usuariodto.getEstado());
-            usuarioexistente.setPassword(usuariodto.getPassword());
-            usuarioexistente.setUsername(usuariodto.getUsername());
-
-            UsuariosEntity actualizado = usuariosService.save(usuarioexistente);
-            System.out.println("ID DESPUÉS DE GUARDAR: " + actualizado.getIdusuario());
-            UsuariosDTO responseDTO = new UsuariosDTO(
-                    actualizado.getIdusuario(),
-                    actualizado.getUsername(),
-                    actualizado.getPassword(),
-                    actualizado.getEstado()
-            );
-            return ResponseEntity.ok(responseDTO);
-        }catch (Exception e) {
-            System.out.println("El error es:" +e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<?> editar(@PathVariable Integer id, @RequestBody @Validated UsuariosEntity body) {
+        var e = usuariosService.findById(id);
+        if (e == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        e.setUsername(body.getUsername());
+        e.setPassword(body.getPassword());
+        e.setEstado(body.getEstado());
+        return ResponseEntity.ok(usuariosService.save(e));
     }
 
 
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<String> delete(@PathVariable ("id") Long id) {
-        try {
-            usuariosService.delete(id);
-            ResponseEntity.status(200);
-            return ResponseEntity.ok("Usuario eliminado correctamente"+ id);
-        } catch (Exception e) {
-            System.out.println("El error es: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        var e = usuariosService.findById(id);
+        if (e == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
+        usuariosService.delete(id);
+        return ResponseEntity.noContent().build(); // 204
     }
 }

@@ -21,7 +21,8 @@ public List<UsuariosEntity> findAll() {
 }
 
     @Override
-    public UsuariosEntity findById(Long id) {
+    @Transactional(readOnly = true)
+    public UsuariosEntity findById(Integer id) {
         return usuariosRepository.findById(id).orElse(null);
     }
 
@@ -33,7 +34,7 @@ public List<UsuariosEntity> findAll() {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(Integer id) {
         usuariosRepository.deleteById(id);
     }
 
