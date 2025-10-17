@@ -29,7 +29,7 @@ public List<UsuariosEntity> findAll() {
     @Override
     @Transactional
     public UsuariosEntity save(UsuariosEntity usuario) {
-        return usuariosRepository.save(usuario);
+        return usuariosRepository.saveAndFlush(usuario);
     }
 
     @Override

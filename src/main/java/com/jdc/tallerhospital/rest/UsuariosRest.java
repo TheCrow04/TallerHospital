@@ -35,6 +35,7 @@ public class UsuariosRest {
     @PostMapping("/crear")
     public ResponseEntity<?> create(@RequestBody @Validated UsuariosEntity body, UriComponentsBuilder uriBuilder) {
         var saved = usuariosService.save(body);
+        System.out.println("ID generado: " + saved.getIdusuario());
         URI location = uriBuilder.path("/api/usuarios/{id}").buildAndExpand(saved.getIdusuario()).toUri();
         return ResponseEntity.created(location).body(saved);
     }
